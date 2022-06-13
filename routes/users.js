@@ -1,47 +1,56 @@
 const express = require("express");
 
 const router = express.Router();
-router.use(logger)
+router.use(logger);
 
 router.get("/", (req, res) => {
-  res.send("from user page");
+  // res.send("from user page");
 });
-router.get("/new,", (req, res) => {
-    res.render("users/new"), {fName:"Virat Kohli"};
-  });  
+router.get("/new", (req, res) => {
+  res.render("users/new", { fName: "Virat Kohli" });
+});
 
 router.post("/", (req, res) => {
-//   res.send("using post");
-console.log(req.body.firstName);
+  //   res.send("using post");
+  const isValid = true;
+  if (isValid) {
+    users.push({firstName: req.body.firstName});
+    res.redirect(`/users/${users.length-1}`);
+  }else{
+    console.log("Error")
+    res.render("users/new", {firstName: req.body.firstName} )
+  }
+  console.log(req.body.firstName);
+  res.send("hello");
 });
 
-// router
-//   .route("/:id")
-//   .get((req, res) => {
-//     res.send(`this is dynamic Id ${req.params.id} added by Users in URL`);
-//   })
-//   .put((req, res) => {
-//     res.send(
-//       `Update = : = this is dynamic Id ${req.params.id} added by Users in URL`
-//     );
-//   })
-//   .delete((req, res) => {
-//     res.send(
-//         `Delete  = : = this is dynamic Id ${req.params.id} added by Users in URL`
-//         );
-//     });
-    
-//     const users = [{name:'virat'}, {name:'Rohit'}]
-//   router.param("id", (req, res, next, id)=>{
-//     // console.log(id)  
+router
+  .route("/:id")
+  .get((req, res) => {
+    res.send(`this is dynamic Id ${req.params.id} added by Users in URL`);
+  })
+  .put((req, res) => {
+    res.send(
+      `Update = : = this is dynamic Id ${req.params.id} added by Users in URL`
+    );
+  })
+  .delete((req, res) => {
+    res.send(
+      `Delete  = : = this is dynamic Id ${req.params.id} added by Users in URL`
+    );
+  });
 
-//     req.user = users[id];
-//   next()
-//   })
+const users = [{ name: "virat" }, { name: "Rohit" }];
+router.param("id", (req, res, next, id) => {
+  // console.log(id)
+
+  req.user = users[id];
+  next();
+});
 // router.get("/:id", (req, res) => {
 //   res.send(`this is dynamic Id ${req.params.id} added by Users in URL`);
 // });
-      
+
 // router.put("/:id", (req, res) => {
 //   res.send(
 //     `Update = : = this is dynamic Id ${req.params.id} added by Users in URL`
@@ -57,16 +66,13 @@ console.log(req.body.firstName);
 
 //middleware
 
-function logger(req,res,next){
-    console.log(req.originalUrl)
-    next()
-} 
-
-
-
+function logger(req, res, next) {
+  console.log(req.originalUrl);
+  next();
+}
 
 //this will not execuate ae we have passed dynamic id (:id) above ===> id = new
-router.get("/first", (req, res) => {
-  res.send("from user first page");
-});      
+// router.get("/first", (req, res) => {
+//   res.send("from user first page");
+// });
 module.exports = router;
